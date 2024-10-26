@@ -17,10 +17,16 @@ LRESULT CALLBACK LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam)
     {
         MSLLHOOKSTRUCT* pMouseStruct = (MSLLHOOKSTRUCT*)lParam;
 		POINT mousepos = pMouseStruct->pt;
-        if (mousepos.x < GameWindowSize.left || mousepos.x > GameWindowSize.right || mousepos.y < GameWindowSize.top || mousepos.y > GameWindowSize.bottom)
-            return CallNextHookEx(MouseHook, nCode, wParam, lParam); // is in window parameters 
-        else
-			return 0; // block the input
+        if(mousepos.x > GameWindowSize.right-5 || mousepos.y > GameWindowSize.bottom-5 || mousepos.y < GameWindowSize.top+5 || mousepos.x < GameWindowSize.left+5)
+        {
+			printf("Mouse position: (%d, %d)\n", mousepos.x, mousepos.y);
+          
+			printf("Window Position: (%d, %d)\n", GameWindowSize.left, GameWindowSize.top);
+			printf("Window Size: Width = %d, Height = %d\n", GameWindowSize.right, GameWindowSize.bottom);
+
+            return 1; 
+           
+        }
     }
 
     return CallNextHookEx(MouseHook, nCode, wParam, lParam);
